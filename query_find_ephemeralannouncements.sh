@@ -38,9 +38,5 @@ do
       done <<< "$origins"
 
     done <<< "$prefix_list"
-
-    # TODO which ip from BL matches which prefix?
-    # TODO which ip from HP matches which prefix?
-    # TODO what's the delta for less/more specific announcements?
   fi
 done
