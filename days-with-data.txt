@@ -1,0 +1,26 @@
+# Days with Data
+
+2017-06-30 hp dark, bl
+2017-07-03 hp dark, bl
+2017-07-07 hp dark, bl
+2017-07-12 hp dark, bl
+2017-07-13 hp dark, bl
+2017-07-16 hp dark, hp univ, bl
+2017-07-18 hp dark, hp univ, bl
+2017-07-31 hp dark, hp univ, bl
+2017-08-02 hp dark, hp univ, bl
+2017-08-03 hp dark, hp univ, bl
+2017-08-05 hp dark, hp univ, bl
+2017-08-06 hp dark, hp univ, bl
+2017-08-07 hp dark, hp univ, bl
+2017-08-08 hp dark, hp univ, bl
+2017-08-09 hp dark, hp univ, bl
+2017-08-11 hp dark, hp univ, bl
+2017-08-12 hp dark, hp univ, bl
+2017-08-14 hp dark, hp univ, bl
+2017-08-15 hp dark, hp univ, bl
+
+
+# All in one line
+
+20170630 20170703 20170707 20170712 20170713 20170716 20170718 20170731 20170802 20170803 20170805 20170806 20170807 20170808 20170809 20170811 20170812 20170814 20170815 
