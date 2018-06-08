@@ -1,46 +1,49 @@
 # Work Flow
 
-## Steps
+## Build (on mobi7)
+
+CAF commit: cdfe2c2236aebceaa13145c2999af6039dcfc3c9
+```
+CXX=/opt/src/clang/build/bin/clang++ LDFLAGS="$(/opt/src/clang/build/bin/llvm-config --ldflags) -lc++abi" ./configure --build-type=release --no-opencl --no-tools --no-examples
+make -j 24
+```
+
+VAST commit: 2b761725981e5eafe3e09a8ca2bb70295e42b551
+```
+CXX=/opt/src/clang/build/bin/clang++ LDFLAGS="$(/opt/src/clang/build/bin/llvm-config --ldflags) -lc++abi" ./configure --build-type=release --with-caf=/$HOME/persistent_vast/actor-framework/build
+make -j 24
+```
+
+## Commands
 
 ```
-DAY=
-MOTH=
-DATE=2017-$MOTH-$DAY
+$ # start vast somewhere
+$ # clean everything **[works with reset workaround]**
+$ ./reset_vast_state.sh   # not sure where this is ...
+$ 
+$ # go to scripts folder in real-demo folder
+$ # import spam blacklist + example query **[works]**
+$ ./import_blacklist_for_day.sh 20170809
+$ vast export bro "&type == \"bro::blacklist\"" | bro-cut -d source.network | sort -u | wc -l
+$ 
+$ # import bl honeypot + query**[works]**
+$ ./filtered_import_honeypot_for_day.sh 2017-08-09
+$ vast export bro "&type == \"bro::conn\"" | bro-cut -d id.orig_h | sort -u | wc -l
+$
+$ # start continous query for suspicious AS in another tab**[works, if backend does not crash during mrt import]**
+$ # AS23456 youngest announcement is at 2017-08-09T21:22:29
+$ vast export -c bro ":count == 23456" # vast export bro -c "origin_as == 23456"
+$ 
+$ # start importing data for suspicious days
+$ ./filtered_import_mrt_for_day.sh 20170809
+$ ./filtered_import_mrt_for_day.sh 20170808
+$ 
+$ # find some morespecific info
+$ ./query_find_morespecific.sh > morespecific.txt
+$ vim morespecific.txt
 ```
 
-0. Start VAST (and perhaps some continuous query with ...)
-1. Import blacklist data filtered by "spam" type           `./import_blacklist.sh $DATE)`
-2. Import honeypots, filters by ASNs in blacklists         `./filtered_import_honeypot.sh $DATE)`
-3. Make some continuous query                              `vast export bro -c "source_as == $SUSPICIOUS")`
-4. Import mrt data, filtered by IPs in conn logs           `./filtered_import_mrt.sh $DATE)`
-5. Statistics
-    - Conn hosts:                                            `vast export bro "&type == \"bro::conn\"" | bro-cut -d id.orig_h | sort -u | wc -l`
-    - ASNs occurrences:                                      `vast export bro "..." | bro-cut ...`
-    - ASNS that have a withdrawl and lifetime:               `./query_find_withdrawn.sh`
-    - Find MOAs:                                             `./query_find_multipleorigins.sh`
-    - Find more specific announcements                       `./query_find_morespecific.sh`
-    - Find something with time                               `./query_find_ephemeralannouncements.sh`
+## Known problems
 
-## BASH panes
-
-| Pane |           |                      |                      |                     |               |
-|------|-----------|----------------------|----------------------|---------------------|---------------|
-| A    | 0) VAST   | 1) import bl + query |                      |                     |               |
-| B    | 0) query? |                      | 2) import hp + query |                     |               |
-| C    |           |                      |                      | 3) continuous query |               |
-| D    |           |                      |                      | 4) import MRT data  | 5) statistics |
-
-## Notes
-* Maybe we could interleave the some statistics queries with the MRT import, which takes a while ...
-* Not all people will want to stick around for all the imports
-    - What can we show without all the steps?
-    - Maybe a local (not server) VAST instance with a small dataset for some queries?
-
-## TODOs
-- [ ] Write continuous query (once we have more knowledge about the data)
-- [x] Draft for demo plan
-- [ ] Script to sift through data and find a dataset
-- [ ] Settle on a dataset & adjust scripts
-- [ ] Fix work flow
-- [ ] Fix scripts to the data?
+The continous query in to find announcements for the origin as does not work using the column name as the resulting expression fails to be tailored to the withdraw updates also included in the data which leads VAST to crash. Using the type as a workaround yields similar results here.
 
