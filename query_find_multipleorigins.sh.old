@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # find all uniq prefixes
-for i_prefix in $(vast export bro "&type == \"mrt::bgp4mp::update::announcement\"" | bro-cut prefix | sort -u)
+for i_prefix in $(vast export bro "&type == \"mrt::bgp4mp::announcement\"" | bro-cut prefix | sort -u)
 do
   #find all prefixeds with more specific announcements
-  i_list=$(timeout 2 vast export bro "&type == \"mrt::bgp4mp::update::announcement\" && prefix == $i_prefix" | bro-cut origin_as | sort -u)
+  i_list=$(timeout 2 vast export bro "&type == \"mrt::bgp4mp::announcement\" && prefix == $i_prefix" | bro-cut origin_as | sort -u)
   size=$(echo "$i_list" | wc -l)
 
   # we need at least 2 different origins
