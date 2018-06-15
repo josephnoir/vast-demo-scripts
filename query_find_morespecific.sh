@@ -29,7 +29,8 @@ do
       w_min=$(timeout $t_vast vast export bro \
         "&type == \"mrt::bgp4mp::update::withdrawn\" && prefix == $j_prefix" | \
         bro-cut -d timestamp | sort | sed -n '1{p;q;}'| cut -d+ -f1 )
-      echo "... [WMIN: $w_min]"
+      #echo "... [WMIN: $w_min]"
+      echo "... "
       ##find min and max timestamp for prefix withdraws
       #w_min_max=$(timeout 2 vast export bro "&type == \"mrt::bgp4mp::update::withdrawn\" && prefix == $j_prefix" | \
       #  bro-cut timestamp | cut -d. -f1 | awk '{a[NR]=$1}END{asort(a);print a[1],"\n"a[NR]}')
@@ -50,7 +51,8 @@ do
         a_min=$(timeout $t_vast vast export bro \
           "&type == \"mrt::bgp4mp::update::announcement\" && prefix == $j_prefix && origin_as == $k_origin" | \
           bro-cut -d timestamp | sort | sed -n '1{p;q;}'| cut -d+ -f1)
-        echo -e "...... AS$k_origin\t[AMIN: $a_min]"
+        #echo -e "...... AS$k_origin\t[AMIN: $a_min]"
+        echo -e "...... AS$k_origin"
       done <<< "$origins"
     done <<< "$i_list"
 
